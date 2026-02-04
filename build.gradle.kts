@@ -2,10 +2,12 @@ plugins {
     kotlin("jvm") version "2.3.20-Beta1"
     id("com.gradleup.shadow") version "8.3.0"
     id("xyz.jpenilla.run-paper") version "2.3.1"
+    id("maven-publish")
+    id("fr.il_totore.manadrop") version "0.4.3"
 }
 
 group = "org.adw39"
-version = "1.0-SNAPSHOT"
+version = "1.0"
 
 repositories {
     mavenCentral()
@@ -37,6 +39,7 @@ kotlin {
 
 tasks.build {
     dependsOn("shadowJar")
+    finalizedBy("spigotPlugin")
 }
 
 tasks.processResources {
@@ -45,5 +48,33 @@ tasks.processResources {
     filteringCharset = "UTF-8"
     filesMatching("plugin.yml") {
         expand(props)
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/${System.getenv("GITHUB_ACTOR")}/${rootProject.name}")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+        publications {
+            create<MavenPublication>("GitHubPackages") {
+                artifactId = rootProject.name.lowercase()
+                from(components["java"])
+            }
+        }
+    }
+}
+
+spigot {
+    desc {
+        apiVersion("1.21")
+        authors("tam1192")
+        website("https://adw39.org")
+        main("org.adw39.nSPlugin.NSPlugin")
     }
 }
