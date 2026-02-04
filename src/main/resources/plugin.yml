@@ -1,0 +1,7 @@
+name: NSPlugin
+version: '1.0-SNAPSHOT'
+main: org.adw39.nSPlugin.NSPlugin
+api-version: '1.21'
+prefix: NSPlugin
+authors: [ nikki9750 ]
+website: https://adw39.org
